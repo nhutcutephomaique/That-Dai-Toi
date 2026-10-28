@@ -1,4 +1,6 @@
+# ==========================================
 # Unity generated files
+# ==========================================
 [Ll]ibrary/
 [Tt]emp/
 [Oo]bj/
@@ -7,9 +9,15 @@
 [Ll]ogs/
 [Uu]ser[Ss]ettings/
 [Mm]emoryCaptures/
+[Rr]ecordings/
 
+# ==========================================
 # Unity-generated solution and project files
+# ==========================================
+ExportedObj/
+.consulo/
 *.csproj
+*.unityproj
 *.sln
 *.suo
 *.user
@@ -23,25 +31,45 @@
 *.VC.db
 *.VC.VC.opendb
 
+# ==========================================
 # Unity crash and diagnostic files
+# ==========================================
 sysinfo.txt
 crashlytics-build.properties
 *.stackdump
 
-# Unity Asset Store tools
+# ==========================================
+# Asset Store & External Tools
+# ==========================================
 /Assets/AssetStoreTools*
+/[Aa]ssets/Plugins/Editor/JetBrains*
 
+# ==========================================
 # IDE and editor files
+# ==========================================
 .vs/
 .idea/
+.vscode/
+.rider/
+*.sln.docstates
 
+# ==========================================
 # Operating system files
+# ==========================================
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 Desktop.ini
 
-# Build archives
+# ==========================================
+# Build & Package archives
+# ==========================================
 *.apk
 *.aab
 *.app
 *.unitypackage
+*.ipa
