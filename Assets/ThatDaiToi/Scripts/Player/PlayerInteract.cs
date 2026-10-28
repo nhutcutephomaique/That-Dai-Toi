@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PlayerInteract : MonoBehaviour
@@ -9,9 +10,16 @@ public class PlayerInteract : MonoBehaviour
 
     public Transform holdPosition;
     public GameObject currentItem;
+    public TMP_Text propmtText;
+    public Camera playerCamera;
 
     void Update()
     {
+        if (propmtText != null)
+        {
+            propmtText.text = "";
+        }
+
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (currentItem != null)
@@ -27,14 +35,26 @@ public class PlayerInteract : MonoBehaviour
 
     void PickUpItem()
     {
-        Ray ray = new Ray(transform.position, transform.forward);
-        RaycastHit hit;
+        Camera cameraToUse = playerCamera != null ? playerCamera : Camera.main;
+        if (cameraToUse == null)
+        {
+            Debug.LogError("PlayerInteract requires a player camera or a camera tagged MainCamera.", this);
+            return;
+        }
 
-        if (Physics.Raycast(ray, out hit, pickUpRange, itemLayer))
+        Ray ray = new Ray(cameraToUse.transform.position, cameraToUse.transform.forward);
+        RaycastHit hit;
+        int raycastMask = itemLayer.value == 0 ? Physics.DefaultRaycastLayers : itemLayer.value;
+
+        if (Physics.Raycast(ray, out hit, pickUpRange, raycastMask))
         {
             if (hit.collider.CompareTag("Item"))
             {
                 currentItem = hit.collider.gameObject;
+                if (propmtText != null)
+                {
+                    propmtText.text = "E";
+                }
 
                 // 1. Tắt Rigidbody (kinematic)
                 Rigidbody rb = currentItem.GetComponent<Rigidbody>();
@@ -65,31 +85,46 @@ public class PlayerInteract : MonoBehaviour
 
     void DropItem()
     {
-        Debug.Log("Đã thả: " + currentItem.name);
+        ReleaseCurrentItem(true);
+    }
+
+    void OnDisable()
+    {
+        ReleaseCurrentItem(false);
+    }
+
+    void ReleaseCurrentItem(bool throwItem)
+    {
+        if (currentItem == null)
+        {
+            return;
+        }
+
+        GameObject item = currentItem;
+        currentItem = null;
+        Debug.Log("Đã thả: " + item.name);
 
         // Bật lại Collider khi thả
-        Collider col = currentItem.GetComponent<Collider>();
+        Collider col = item.GetComponent<Collider>();
         if (col != null)
         {
             col.enabled = true;
         }
 
         // Bật lại Rigidbody khi thả
-        Rigidbody rb = currentItem.GetComponent<Rigidbody>();
+        Rigidbody rb = item.GetComponent<Rigidbody>();
         if (rb != null)
         {
             rb.isKinematic = false;
         }
 
         // Tách khỏi phân cấp parent
-        currentItem.transform.SetParent(null);
+        item.transform.SetParent(null);
 
         // Đẩy vật phẩm về phía trước một chút
-        if (rb != null)
+        if (throwItem && rb != null)
         {
             rb.AddForce(transform.forward * 5f, ForceMode.Impulse);
         }
-
-        currentItem = null;
     }
 }
