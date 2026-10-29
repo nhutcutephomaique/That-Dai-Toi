@@ -52,6 +52,8 @@ crashlytics-build.properties
 .vscode/
 .rider/
 *.sln.docstates
+/opencode/
+/Assets/ThatDaiToi/Scripts/Player/Flow/HUONG_DAN_PLAYER_FLOW.md
 
 # ==========================================
 # Operating system files
